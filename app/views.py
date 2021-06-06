@@ -45,26 +45,45 @@ def tweets_to_data_frame(tweets):
     
     return df
 
+###Work area
+
+#Note: This version does not use HttpResponseRedirect as the form data uses 'GET' does not modify the database
+@login_required(login_url="/login/")
+def tweethistory(request):
+    context = {}
+    context['segment'] = "ui-twitter-tables"
+    context['count'] = 60
+    #load blank page...i.e no post data...empty context/error message
+    try:
+        context['twitter_handle'] = request.GET['twitter_handle']
+    except (KeyError):
+        context['error_message'] = "No twitter handle entered"
+        return render(request, 'ui-twitter-tables.html', context)
+    else:
+        #TODO - remember to deal with the error if twitter handle is incorrect
+        auth = OAuthHandler(consumer_key, consumer_secret)
+        auth.set_access_token(access_token, access_token_secret)
+        api = API(auth,wait_on_rate_limit=True)
+        tweets = api.user_timeline(screen_name=context['twitter_handle'], count=context['count'])
+        df = tweets_to_data_frame(tweets)
+        context['data'] = df
+        return render(request, 'ui-twitter-tables.html', context)
+   
+
+
+
+##Work area ends
+
+
 @login_required(login_url="/login/")
 def pages(request):
     context = {}
-
-    handle = "SkyCirclesLA"
-    amount = 60
-    auth = OAuthHandler(consumer_key, consumer_secret)
-    auth.set_access_token(access_token, access_token_secret)
-    api = API(auth,wait_on_rate_limit=True)
-    tweets = api.user_timeline(screen_name=handle, count=amount)
-    df = tweets_to_data_frame(tweets)
 
     # All resource paths end in .html.
     # Pick out the html file name from the url. And load that template.
     try:
         load_template      = request.path.split('/')[-1]
         context['segment'] = load_template
-        context['data'] = df
-        context['handle'] = handle
-        context['count'] = amount
         
         html_template = loader.get_template( load_template )
         return HttpResponse(html_template.render(context, request))

@@ -34,16 +34,39 @@
                     <!-- [ basic-table ] start -->
                     <div class="col-xl-12">
                         <div class="card">
+                            {% if error_message %}
                             <div class="card-header">
-                                <h5>{{handle}}</h5>
-                                <span class="d-block m-t-5">Here is the last <h4 style="display:inline;"><code>{{ count }}</code></h4> Tweets for {{ handle }}</span>
+                                <h5>{{error_message}}</h5>
+                                <span class="d-block m-t-5"><h4 style="display:inline;"><code>Error</code></h4></span>
                             </div>
                             <div class="card-block table-border-style">
                                 <div class="row justify-content-center">
-                                    <div class="col-sm-6">
-                                        <input type="text" id="icon-search" class="form-control mb-4" placeholder="Enter Twitter handle here... ">
-                                    </div>
+                                    <form class="form-inline" action="{% url 'tweethistory' %}" method="get">
+                                        <div class="form-group mx-sm-3 mb-2">
+                                            <label for="input_twitter_handle" class="sr-only">Twitter Handle</label>
+                                            <input type="text" class="form-control" id="input_twitter_handle" name="twitter_handle" placeholder="Enter Twitter handle ... ">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary mb-2">Submit</button>
+                                    </form>
                                 </div>
+                                <hr />
+                            </div>
+                            {% else %}
+                            <div class="card-header">
+                                <h5>{{twitter_handle}}</h5>
+                                <span class="d-block m-t-5">Here is the last <h4 style="display:inline;"><code>{{ count }}</code></h4> Tweets for {{ twitter_handle }}</span>
+                            </div>
+                            <div class="card-block table-border-style">
+                                <div class="row justify-content-center">
+                                    <form class="form-inline" action="{% url 'tweethistory' %}" method="get">
+                                        <div class="form-group mx-sm-3 mb-2">
+                                            <label for="input_twitter_handle" class="sr-only">Twitter Handle</label>
+                                            <input type="text" class="form-control" id="input_twitter_handle" name="twitter_handle" placeholder="Enter Twitter handle ... ">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary mb-2">Submit</button>
+                                    </form>
+                                </div>
+                                <hr />
                                 <div class="table-responsive">
                                     <table class="table table-hover">
                                         <thead>
@@ -74,6 +97,7 @@
                                     </table>
                                 </div>
                             </div>
+                            {% endif%}
                         </div>
                     </div>
                     <!-- [ basic-table ] end -->
