@@ -83,10 +83,6 @@ def tweethistory(request):
             naive_datetime = row['date']
             aware_datetime = make_aware(naive_datetime)
 
-            # Process location data; separate into x and y
-            x_coord = row['geo']['coordinates'][0]
-            y_coord = row['geo']['coordinates'][1]
-
             # First verify that the tweet (using the tweet id from twitter does not already exist before adding to database)
             # Altternative: Can use Tweet.objects.get_or_create to avoid the boilerplate code below
             # obj, created = Tweet.objects.get_or_create(tweet_id=row['id'],defaults={
@@ -94,14 +90,21 @@ def tweethistory(request):
             #    'tweet_date': row['date'],
             #    'tweet_location': row['geo']
             # })
+            # Process location data; separate into x and y
+            if type(row['geo']) is dict:
+                x_coord = row['geo']['coordinates'][0]
+                y_coord = row['geo']['coordinates'][1]
+            else:
+                x_coord = 'none'
+                y_coord = 'none'
 
             try:  # Check if the tweet already exist in the database
                 obj = Tweet.objects.get(tweet_id=row['id'])
             except Tweet.DoesNotExist:  # If not, insert the specific columns into the database
                 Tweet.objects.create(
-                    tweet_handle=context['twitter_handle'], 
-                    tweet_id=row['id'], 
-                    tweet_date=aware_datetime, 
+                    tweet_handle=context['twitter_handle'],
+                    tweet_id=row['id'],
+                    tweet_date=aware_datetime,
                     tweet_location_x=x_coord,
                     tweet_location_y=y_coord)
 
