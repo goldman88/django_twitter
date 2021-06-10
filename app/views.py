@@ -52,7 +52,7 @@ def tweets_to_data_frame(tweets):
 def tweethistory(request):
     context = {}
     context['segment'] = "ui-twitter-tables"
-    context['count'] = 60
+    context['count'] = 250
     #load blank page...i.e no post data...empty context/error message
     try:
         context['twitter_handle'] = request.GET['twitter_handle']
