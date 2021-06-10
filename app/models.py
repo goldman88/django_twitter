@@ -8,3 +8,12 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
+class Tweet(models.Model):
+    tweet_handle = models.CharField(max_length=100)
+    tweet_id = models.BigIntegerField(unique=True)
+    tweet_date = models.DateTimeField()
+    tweet_location = models.CharField(null=True, max_length=100)
+
+    def __str__(self):
+        return self.tweet_location
+

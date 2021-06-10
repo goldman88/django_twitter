@@ -8,11 +8,13 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.template import loader
 from django.http import HttpResponse
 from django import template
-#import tweepy
+from django.utils.timezone import make_aware
 from tweepy import API 
 from tweepy import OAuthHandler
 import numpy as np
 import pandas as pd
+
+from .models import Tweet
 
 # The consumer key and secret will be generated for you after
 consumer_key="EMuIyUFtxiEo5RfpPK9CD69o9"
@@ -45,8 +47,6 @@ def tweets_to_data_frame(tweets):
     
     return df
 
-###Work area
-
 #Note: This version does not use HttpResponseRedirect as the form data uses 'GET' does not modify the database
 @login_required(login_url="/login/")
 def tweethistory(request):
@@ -67,12 +67,28 @@ def tweethistory(request):
         tweets = api.user_timeline(screen_name=context['twitter_handle'], count=context['count'])
         df = tweets_to_data_frame(tweets)
         context['data'] = df
+
+        #Populate database
+        #Iterate through all the rows in the data frame
+        for index,row in df.iterrows():
+
+            #Make date timezone aware
+            naive_datetime = row['date']
+            aware_datetime = make_aware(naive_datetime)
+
+            #First verify that the tweet (using the tweet id from twitter does not already exist before adding to database)
+            #Can use Tweet.objects.get_or_create to avoid the boilerplate code below
+            try:
+                obj = Tweet.objects.get(tweet_id=row['id'])
+            except Tweet.DoesNotExist:
+                #Insert the specific columns into the database
+                Tweet.objects.create(tweet_handle=context['twitter_handle'],tweet_id=row['id'],tweet_date=aware_datetime,tweet_location=row['geo'])
+
+            #Note: instead of passing data directly to context from tweepy, can read from database but it will be more expensive i.e. a noteable
+            #performance hit
+
         return render(request, 'ui-twitter-tables.html', context)
-   
 
-
-
-##Work area ends
 
 
 @login_required(login_url="/login/")
