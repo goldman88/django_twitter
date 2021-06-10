@@ -12,7 +12,8 @@ class Tweet(models.Model):
     tweet_handle = models.CharField(max_length=100)
     tweet_id = models.BigIntegerField(unique=True)
     tweet_date = models.DateTimeField()
-    tweet_location = models.CharField(null=True, max_length=100)
+    tweet_location_x = models.CharField(null=True, max_length=25)
+    tweet_location_y = models.CharField(null=True, max_length=25)
 
     def __str__(self):
         return self.tweet_location
