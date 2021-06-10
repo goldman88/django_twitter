@@ -95,8 +95,8 @@ def tweethistory(request):
                 x_coord = row['geo']['coordinates'][0]
                 y_coord = row['geo']['coordinates'][1]
             else:
-                x_coord = 'none'
-                y_coord = 'none'
+                x_coord = 0.0
+                y_coord = 0.0
 
             try:  # Check if the tweet already exist in the database
                 obj = Tweet.objects.get(tweet_id=row['id'])
