@@ -84,12 +84,14 @@ def tweethistory(request):
             aware_datetime = make_aware(naive_datetime)
 
             # First verify that the tweet (using the tweet id from twitter does not already exist before adding to database)
-            # Altternative: Can use Tweet.objects.get_or_create to avoid the boilerplate code below
+            # Alternative: Can use Tweet.objects.get_or_create to avoid the boilerplate code below
+            #https://docs.djangoproject.com/en/3.2/ref/models/querysets/#get-or-create
             # obj, created = Tweet.objects.get_or_create(tweet_id=row['id'],defaults={
             #    'tweet_handle': context['twitter_handle'],
             #    'tweet_date': row['date'],
             #    'tweet_location': row['geo']
             # })
+
             # Process location data; separate into x and y
             if type(row['geo']) is dict:
                 x_coord = row['geo']['coordinates'][0]

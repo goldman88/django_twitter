@@ -70,12 +70,57 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+#Sqlite
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME'  : 'db.sqlite3',
     }
 }
+
+#MariaDB/MySQL
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.mysql',
+#        'NAME': 'django_tweets',
+#        'USER': 'django_twitter',
+#        'PASSWORD': '1234',
+#        'HOST': '127.0.0.1',
+#        'PORT': '3306',
+#        'OPTIONS': {
+#            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+#        }, 
+#    }
+#}
+
+#PostgreSQL
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql',
+#        'NAME': 'django_tweets',
+#        'USER': 'django_twitter',
+#        'PASSWORD': '1234',
+#        'HOST': '127.0.0.1',
+#        'PORT': '5432',
+#    }
+#}
+
+
+#SQL Server
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'mssql',
+#        'NAME': 'django_tweets',
+#        'USER': 'sa',
+#        'PASSWORD': 'eNter_InN0w',
+#        'HOST': 'LAPTOP-SC6UU1VP\SQLEXPRESS',
+#        'PORT': '1433',
+#         'OPTIONS': {
+#                'driver': 'ODBC Driver 17 for SQL Server',
+#        },
+#    }
+#}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
